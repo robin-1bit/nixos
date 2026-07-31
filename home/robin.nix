@@ -2,8 +2,8 @@
 
 
 {
-home.username = "robin";
-home.homeDirectory = "/home/robin";
+home.username = "isandrin";
+home.homeDirectory = "/home/isandrin";
 
   home.stateVersion = "25.11";
   programs.home-manager.enable = true;
@@ -32,7 +32,7 @@ programs.nix-index = {
 #nvim  
  home.file.".config/nvim/init.lua".source = ../nvim/init.lua;
 
-
+home.file.".config/noctalia/config.toml".source = ..noctalia/config.toml:
   #alacritty 
   home.file.".config/alacritty/alacritty.toml".source = ./alacritty/alacritty.toml;
 
@@ -109,12 +109,12 @@ programs.fish = {
   shellAliases = { 
     aria = "aria2c -x16 -s16";
     vid = "yt-dlp --cookies-from-browser chrome";
-    nrs = "sudo nixos-rebuild switch --flake /home/robin/nix#transcendent";
-    hrs = "home-manager switch --flake /home/robin/nix#robin";
-    hconf = "nvim /home/robin/nix/home/robin.nix";
-    ins = "yt -dlp --cookies /home/robin/.cookies/instagram.txt";
-    nconf = "nvim /home/robin/nix/configuration.nix";
-    nfk = "nvim /home/robin/nix/flake.nix";
+    nrs = "sudo nixos-rebuild switch --flake /home/isandrin/nix#transcendent";
+    hrs = "home-manager switch --flake /home/isandrin/nix#robin";
+    hconf = "nvim /home/isandrin/nix/home/robin.nix";
+    ins = "yt -dlp --cookies /home/isandrin/.cookies/instagram.txt";
+    nconf = "nvim /home/isandrin/nix/configuration.nix";
+    nfk = "nvim /home/isandrin/nix/flake.nix";
 };
 
 interactiveShellInit = '' 
