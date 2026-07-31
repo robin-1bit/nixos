@@ -1,0 +1,18 @@
+[bar.main]
+position = "top"
+margin_ends = 0
+margin_edge = 0
+margin_sides = 0
+panel_overlap = 0
+scale = 1.20
+
+background_opacity = 1.0     # fully opaque, no transparency
+radius = 0                   # global corner radius fallback
+radius_top_left = 0
+radius_top_right = 0
+radius_bottom_left = 0
+radius_bottom_right = 0
+
+start = ["workspaces"]
+center = ["clock", "control-center"]
+end = [ "volume", "bluetooth", "network", "battery", "session"]
