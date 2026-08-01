@@ -27,6 +27,7 @@ nixpkgs.config.allowUnfree = true;
 
 # ------------------------------------------------------------
 
+services.upower.enable = true;
 networking.hostName = "transcendent";
 networking.networkmanager.enable = true;
 
@@ -282,6 +283,7 @@ environment.systemPackages = with pkgs; [
 # Development
 gcc
 gnumake
+efibootmgr
 cmake
 gdb
 git
