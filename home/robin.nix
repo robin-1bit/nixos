@@ -1,244 +1,364 @@
-{ config, pkgs, ...}:
-
+{ config, pkgs, ... }:
 
 {
-home.username = "isandrin";
-home.homeDirectory = "/home/isandrin";
+home = {
+username = "isandrin";
+homeDirectory = "/home/isandrin";
+stateVersion = "25.11";
 
-  home.stateVersion = "25.11";
-  programs.home-manager.enable = true;
-  #cursor-thing-dont-forget
-  home.pointerCursor = {
-    name = "Adwaita";
-    size = 27;
-    package = pkgs.adwaita-icon-theme;
-    gtk.enable = true;
+```
+pointerCursor = {
+  name = "Adwaita";
+  size = 27;
+  package = pkgs.adwaita-icon-theme;
+
+  gtk.enable = true;
+
+  x11 = {
+    enable = true;
+    defaultCursor = "Adwaita";
   };
+};
+```
 
-#nix index 
-programs.nix-index = { 
-  enable = true;
-  enableZshIntegration = true;
 };
 
+programs.home-manager.enable = true;
 
-  #symlinks 
+# ------------------------------------------------------------
 
-  
-  #nirii 
-  home.file.".config/niri/config.kdl".source = ../niri/config.kdl;
+# GTK, icons, cursor, and dark mode
 
+# ------------------------------------------------------------
 
-#nvim  
- home.file.".config/nvim/init.lua".source = ../nvim/init.lua;
+gtk = {
+enable = true;
 
-home.file.".config/noctalia/config.toml".source = ..noctalia/config.toml:
-  #alacritty 
-  home.file.".config/alacritty/alacritty.toml".source = ./alacritty/alacritty.toml;
+```
+theme = {
+  name = "Adwaita-dark";
+  package = pkgs.gnome-themes-extra;
+};
 
-home.file.".config/rofi" = { 
+iconTheme = {
+  name = "Adwaita";
+  package = pkgs.adwaita-icon-theme;
+};
+```
+
+};
+
+dconf.settings = {
+"org/gnome/desktop/interface" = {
+color-scheme = "prefer-dark";
+gtk-theme = "Adwaita-dark";
+icon-theme = "Adwaita";
+cursor-theme = "Adwaita";
+cursor-size = 27;
+};
+};
+
+# ------------------------------------------------------------
+
+# Nix
+
+# ------------------------------------------------------------
+
+programs.nix-index = {
+enable = true;
+};
+
+# ------------------------------------------------------------
+
+# Configuration symlinks
+
+# ------------------------------------------------------------
+
+home.file = {
+".config/niri/config.kdl".source =
+../niri/config.kdl;
+
+```
+".config/nvim/init.lua".source =
+  ../nvim/init.lua;
+
+".config/noctalia/config.toml".source =
+  ../noctalia/config.toml;
+
+".config/alacritty/alacritty.toml".source =
+  ./alacritty/alacritty.toml;
+
+".config/rofi" = {
   source = ./rofi;
   recursive = true;
 };
-  #hyprland 
-  home.file.".config/hypr" = {
-    source = ./hypr; 
-    recursive = true;
-  };
-  #waybar settins 
-  home.file.".config/waybar" = {
-    source = ./waybar;
-    recursive = true;
-  };
 
-home.file.".local/bin/brave-scaled" = {
+".config/hypr" = {
+  source = ./hypr;
+  recursive = true;
+};
+
+".config/waybar" = {
+  source = ./waybar;
+  recursive = true;
+};
+
+".local/bin/brave-scaled" = {
+  executable = true;
+
   text = ''
     #!/usr/bin/env bash
+
     exec brave \
       --enable-features=UseOzonePlatform \
       --ozone-platform=wayland \
-      --force-device-scale-factor=1.25 "$@"
+      --force-device-scale-factor=1.25 \
+      "$@"
   '';
-  executable = true;
+};
+```
+
 };
 
+# ------------------------------------------------------------
 
-  #git settings 
+# Git
+
+# ------------------------------------------------------------
+
 programs.git = {
-    enable = true; 
+enable = true;
 
-    settings.user.name = "robin";
-    settings.user.email = "robinmogha@outlook.com";
-
-    #core defaults 
-    settings = {
-      init.defaultBranch = "main"; 
-
-      pull.rebase = true; 
-      rebase.autosearch = true;
-
-      fetch.prune = true;
-
-      core.editor = "nvim";
-      core.pager = "less -FRSX"; 
-
-      color.ui = true;
-    };
+```
+settings = {
+  user = {
+    name = "robin";
+    email = "robinmogha@outlook.com";
   };
-    
-  #direnv settings 
-  programs.direnv = { 
-    enable = true; 
-    enableZshIntegration = true; 
-    enableBashIntegration = true;
-    nix-direnv.enable = true; 
-  }; 
 
+  init.defaultBranch = "main";
 
-#fish block 
-programs.fish = { 
-  enable = true;
+  pull.rebase = true;
 
-  shellInit = '' 
+  rebase = {
+    autoStash = true;
+  };
+
+  fetch.prune = true;
+
+  core = {
+    editor = "nvim";
+    pager = "less -FRSX";
+  };
+
+  color.ui = true;
+};
+```
+
+};
+
+# ------------------------------------------------------------
+
+# Direnv
+
+# ------------------------------------------------------------
+
+programs.direnv = {
+enable = true;
+nix-direnv.enable = true;
+};
+
+# ------------------------------------------------------------
+
+# Fish
+
+# ------------------------------------------------------------
+
+programs.fish = {
+enable = true;
+
+```
+shellInit = ''
   set -gx LIBVIRT_DEFAULT_URI "qemu:///system"
-  fish_add_path /home/robin/.opencode/bin
-  fish_add_path $HOME/.local/bin 
+
+  fish_add_path $HOME/.opencode/bin
+  fish_add_path $HOME/.local/bin
+
   set -U fish_greeting
-  '';
-
-  shellAliases = { 
-    aria = "aria2c -x16 -s16";
-    vid = "yt-dlp --cookies-from-browser chrome";
-    nrs = "sudo nixos-rebuild switch --flake /home/isandrin/nix#transcendent";
-    hrs = "home-manager switch --flake /home/isandrin/nix#robin";
-    hconf = "nvim /home/isandrin/nix/home/robin.nix";
-    ins = "yt -dlp --cookies /home/isandrin/.cookies/instagram.txt";
-    nconf = "nvim /home/isandrin/nix/configuration.nix";
-    nfk = "nvim /home/isandrin/nix/flake.nix";
-};
-
-interactiveShellInit = '' 
-set -g fish_prompt_pwd_dir_length 0 
-fzf --fish | source 
-zoxide init fish | source 
 '';
+
+shellAliases = {
+  aria = "aria2c -x16 -s16";
+
+  vid =
+    "yt-dlp --cookies-from-browser chrome";
+
+  nrs =
+    "sudo nixos-rebuild switch --flake /home/isandrin/nix#transcendent";
+
+  hrs =
+    "home-manager switch --flake /home/isandrin/nix#isandrin";
+
+  hconf =
+    "nvim /home/isandrin/nix/home/isandrin.nix";
+
+  ins =
+    "yt-dlp --cookies /home/isandrin/.cookies/instagram.txt";
+
+  nconf =
+    "nvim /home/isandrin/nix/configuration.nix";
+
+  nfk =
+    "nvim /home/isandrin/nix/flake.nix";
 };
 
-  
-  #tmux config
+interactiveShellInit = ''
+  set -g fish_prompt_pwd_dir_length 0
+
+  fzf --fish | source
+  zoxide init fish | source
+'';
+```
+
+};
+
+# ------------------------------------------------------------
+
+# Tmux
+
+# ------------------------------------------------------------
+
 programs.tmux = {
-  enable = true;
+enable = true;
 
-  # Make tmux respect true color + modern terminals
-  terminal = "screen-256color";
+```
+terminal = "tmux-256color";
 
-  # Start window/pane indexing at 1
-  baseIndex = 1;
-  keyMode = "vi";
-  mouse = true;
-  historyLimit = 100000;
+baseIndex = 1;
+keyMode = "vi";
+mouse = true;
 
-  extraConfig = ''
-    # -----------------------------
-    # Prefix key: Ctrl + a
-    # -----------------------------
-    unbind C-b
-    set-option -g prefix C-a
-    bind C-a send-prefix
+historyLimit = 100000;
 
-    set -g pane-base-index 1
-    set -g set-clipboard on
-    set -g allow-passthrough on
-    set -as terminal-features '*:clipboard'
+extraConfig = ''
+  unbind C-b
 
-    # -----------------------------
-    # Vim-style pane movement
-    # Ctrl+h/j/k/l
-    # -----------------------------
-    bind -n C-h select-pane -L
-    bind -n C-j select-pane -D
-    bind -n C-k select-pane -U
-    bind -n C-l select-pane -R
+  set-option -g prefix C-a
 
-    # -----------------------------
-    # Splitting panes
-    # -----------------------------
-    bind | split-window -h
-    bind - split-window -v
+  bind C-a send-prefix
 
-    # -----------------------------
-    # Resize panes with Alt + h/j/k/l
-    # -----------------------------
-    bind -n M-h resize-pane -L 3
-    bind -n M-j resize-pane -D 3
-    bind -n M-k resize-pane -U 3
-    bind -n M-l resize-pane -R 3
+  set -g pane-base-index 1
 
-    # -----------------------------
-    # Faster responsiveness
-    # -----------------------------
-    set-option -g escape-time 0
+  set -g set-clipboard on
 
-    # -----------------------------
-    # Status bar
-    # -----------------------------
-    set -g status on
-    set -g status-interval 5
+  set -g allow-passthrough on
 
-    set -g status-style bg=#1e1e2e,fg=#cdd6f4
+  set -as terminal-features '*:clipboard'
 
-    set -g status-left-length 40
-    set -g status-right-length 100
+  # Vim-style pane navigation
+  bind -n C-h select-pane -L
+  bind -n C-j select-pane -D
+  bind -n C-k select-pane -U
+  bind -n C-l select-pane -R
 
-    set -g status-left "  #[bold]#S  "
-    set -g status-right "  %Y-%m-%d %H:%M  "
-  '';
+  # Pane splitting
+  bind | split-window -h
+  bind - split-window -v
+
+  # Pane resizing
+  bind -n M-h resize-pane -L 3
+  bind -n M-j resize-pane -D 3
+  bind -n M-k resize-pane -U 3
+  bind -n M-l resize-pane -R 3
+
+  # Faster Escape handling
+  set-option -g escape-time 0
+
+  # Status bar
+  set -g status on
+  set -g status-interval 5
+
+  set -g status-style \
+    bg=#1e1e2e,fg=#cdd6f4
+
+  set -g status-left-length 40
+  set -g status-right-length 100
+
+  set -g status-left \
+    "  #[bold]#S  "
+
+  set -g status-right \
+    "  %Y-%m-%d %H:%M  "
+'';
+```
+
 };
+
+# ------------------------------------------------------------
+
+# User packages
+
+# ------------------------------------------------------------
 
 home.packages = with pkgs; [
-  fastfetch 
-  direnv 
-  zathura
-  nix-direnv
-  rofi
-  zip
-  file
-  tree
-  less
-  ripgrep
-  noctalia-shell
-  fd
-  bat
-  eza
-  gammastep
-  swaynotificationcenter
-  htop
-  ncdu
-  lsof
-  strace
-  yazi
-  p7zip
-  rar
-  netcat
-  rsync
-  jq
-  yq
-  s-tui
-  fzf
-  zoxide
-  tldr
-  pkgs.tumbler 
-  evince 
-  ps_mem
-  mpv
-  alacritty 
-  grim 
-    nautilus
-  slurp 
-  blueman 
-  swayosd 
-  ffmpegthumbnailer
-  hyprpaper
-  openssl
-  ];
+# Terminal and system tools
+fastfetch
+file
+tree
+less
+ripgrep
+fd
+bat
+eza
+htop
+ncdu
+lsof
+strace
+jq
+yq
+tldr
+s-tui
+
+```
+# File management
+yazi
+zip
+p7zip
+rsync
+
+# Desktop applications
+zathura
+evince
+mpv
+nautilus
+alacritty
+rofi
+
+# Wayland utilities
+grim
+slurp
+gammastep
+swaynotificationcenter
+swayosd
+hyprpaper
+
+# Desktop integration
+blueman
+tumbler
+ffmpegthumbnailer
+
+# Shell tools
+fzf
+zoxide
+direnv
+nix-direnv
+
+# Other
+noctalia-shell
+openssl
+ps_mem
+```
+
+];
 }
+
