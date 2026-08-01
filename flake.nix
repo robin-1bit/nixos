@@ -11,9 +11,12 @@
     };
 
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
+
+    # ADD THIS:
+    noctalia.url = "github:noctalia-dev/noctalia";
   };
 
-  outputs = { self, nixpkgs-system, nixpkgs-home, home-manager, zen-browser, ... }:
+  outputs = { self, nixpkgs-system, nixpkgs-home, home-manager, zen-browser, noctalia, ... }@inputs:
   let
     system = "x86_64-linux";
 
@@ -22,9 +25,6 @@
       config.allowUnfree = true;
     };
   in {
-    # ─────────────────────────────────────────────
-    # NixOS system (NO Home Manager here)
-    # ─────────────────────────────────────────────
     nixosConfigurations.transcendent = nixpkgs-system.lib.nixosSystem {
       inherit system;
       specialArgs = { inherit zen-browser; };
@@ -33,16 +33,13 @@
       ];
     };
 
-    # ─────────────────────────────────────────────
-    # Home Manager (standalone)
-    # ─────────────────────────────────────────────
     homeConfigurations.isandrin =
       home-manager.lib.homeManagerConfiguration {
         pkgs = pkgs;
+        extraSpecialArgs = { inherit inputs; }; # PASS INPUTS HERE
         modules = [
           ./home/isandrin.nix
         ];
       };
   };
 }
-

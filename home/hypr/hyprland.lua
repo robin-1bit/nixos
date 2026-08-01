@@ -19,7 +19,7 @@ hl.monitor({
 ---------------------
 ---- MY PROGRAMS ----
 ---------------------
-local terminal    = "alacritty"
+local terminal    = "kitty"
 local fileManager = "nautilus"
 local menu        = "wofi --show drun" -- not bound to a key in the original, kept for reuse
 
@@ -238,8 +238,8 @@ hl.device({
 local mainMod = "SUPER"
 
 -- Apps / launchers
-hl.bind("CTRL + SHIFT + Y", hl.dsp.exec_cmd("zen-browser --private-window"))
-hl.bind(mainMod .. " + Y",  hl.dsp.exec_cmd("zen-browser"))
+hl.bind("CTRL + SHIFT + Y", hl.dsp.exec_cmd("zen-beta --private-window"))
+hl.bind(mainMod .. " + Y",  hl.dsp.exec_cmd("zen-beta"))
 hl.bind(mainMod .. " + Q",  hl.dsp.exec_cmd("brave-origin --force-dark-mode --enable-features=WebUIDarkMode --force-device-scale-factor=1.20"))
 hl.bind(mainMod .. " + P",  hl.dsp.exec_cmd("protonvpn-app"))
 hl.bind(mainMod .. " + I",  hl.dsp.exec_cmd(terminal))

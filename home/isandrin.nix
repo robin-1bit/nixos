@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
 home = {
@@ -6,8 +6,8 @@ username = "isandrin";
 homeDirectory = "/home/isandrin";
 stateVersion = "25.11";
 
-```
 pointerCursor = {
+enable = true;
   name = "Adwaita";
   size = 27;
   package = pkgs.adwaita-icon-theme;
@@ -19,7 +19,6 @@ pointerCursor = {
     defaultCursor = "Adwaita";
   };
 };
-```
 
 };
 
@@ -34,7 +33,6 @@ programs.home-manager.enable = true;
 gtk = {
 enable = true;
 
-```
 theme = {
   name = "Adwaita-dark";
   package = pkgs.gnome-themes-extra;
@@ -44,7 +42,6 @@ iconTheme = {
   name = "Adwaita";
   package = pkgs.adwaita-icon-theme;
 };
-```
 
 };
 
@@ -78,12 +75,15 @@ home.file = {
 ".config/niri/config.kdl".source =
 ../niri/config.kdl;
 
-```
 ".config/nvim/init.lua".source =
   ../nvim/init.lua;
+  ".config/kitty/kitty.conf".source = 
+  ./kitty/kitty.conf; 
+".config/mpv/mpv.conf".source = 
+ ./mpv/.config/mpv/mpv.conf;
 
 ".config/noctalia/config.toml".source =
-  ../noctalia/config.toml;
+  ./noctalia/config.toml;
 
 ".config/alacritty/alacritty.toml".source =
   ./alacritty/alacritty.toml;
@@ -116,7 +116,6 @@ home.file = {
       "$@"
   '';
 };
-```
 
 };
 
@@ -129,7 +128,6 @@ home.file = {
 programs.git = {
 enable = true;
 
-```
 settings = {
   user = {
     name = "robin";
@@ -153,7 +151,6 @@ settings = {
 
   color.ui = true;
 };
-```
 
 };
 
@@ -177,7 +174,6 @@ nix-direnv.enable = true;
 programs.fish = {
 enable = true;
 
-```
 shellInit = ''
   set -gx LIBVIRT_DEFAULT_URI "qemu:///system"
 
@@ -218,7 +214,6 @@ interactiveShellInit = ''
   fzf --fish | source
   zoxide init fish | source
 '';
-```
 
 };
 
@@ -231,7 +226,6 @@ interactiveShellInit = ''
 programs.tmux = {
 enable = true;
 
-```
 terminal = "tmux-256color";
 
 baseIndex = 1;
@@ -243,9 +237,9 @@ historyLimit = 100000;
 extraConfig = ''
   unbind C-b
 
-  set-option -g prefix C-a
+  set-option -g prefix C-s
 
-  bind C-a send-prefix
+  bind C-s send-prefix
 
   set -g pane-base-index 1
 
@@ -290,7 +284,6 @@ extraConfig = ''
   set -g status-right \
     "  %Y-%m-%d %H:%M  "
 '';
-```
 
 };
 
@@ -304,6 +297,8 @@ home.packages = with pkgs; [
 # Terminal and system tools
 fastfetch
 file
+inputs.noctalia.packages.${pkgs.system}.default
+proton-vpn
 tree
 less
 ripgrep
@@ -312,6 +307,7 @@ bat
 eza
 htop
 ncdu
+kitty
 lsof
 strace
 jq
@@ -319,7 +315,6 @@ yq
 tldr
 s-tui
 
-```
 # File management
 yazi
 zip
@@ -354,10 +349,8 @@ direnv
 nix-direnv
 
 # Other
-noctalia-shell
 openssl
 ps_mem
-```
 
 ];
 }

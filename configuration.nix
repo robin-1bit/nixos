@@ -18,6 +18,7 @@ nix.settings.experimental-features = [
 "flakes"
 ];
 
+nix.settings.auto-optimise-store = true;
 nixpkgs.config.allowUnfree = true;
 
 # ------------------------------------------------------------
@@ -56,7 +57,6 @@ boot.kernelPackages = pkgs.linuxPackages_latest;
 boot.loader = {
 systemd-boot.enable = false;
 
-```
 efi = {
   canTouchEfiVariables = true;
   efiSysMountPoint = "/boot/efi";
@@ -70,7 +70,6 @@ grub = {
   # Keep this enabled only when dual-booting.
   useOSProber = true;
 };
-```
 
 };
 
@@ -93,7 +92,6 @@ isNormalUser = true;
 description = "isandrin";
 shell = pkgs.fish;
 
-```
 extraGroups = [
   "networkmanager"
   "wheel"
@@ -103,7 +101,6 @@ extraGroups = [
 ];
 
 packages = [ ];
-```
 
 };
 
@@ -133,11 +130,9 @@ VISUAL = "nvim";
 security.sudo = {
 enable = true;
 
-```
 extraConfig = ''
   Defaults pwfeedback
 '';
-```
 
 };
 
@@ -175,12 +170,10 @@ services.gvfs.enable = true;
 xdg.portal = {
 enable = true;
 
-```
 extraPortals = with pkgs; [
   xdg-desktop-portal-hyprland
   xdg-desktop-portal-gtk
 ];
-```
 
 };
 
@@ -220,7 +213,6 @@ services.acpid.enable = true;
 services.keyd = {
 enable = true;
 
-```
 keyboards.default = {
   ids = [ "*" ];
 
@@ -228,7 +220,6 @@ keyboards.default = {
     rightalt = "leftmeta";
   };
 };
-```
 
 };
 
@@ -241,7 +232,6 @@ keyboards.default = {
 hardware.bluetooth.enable = true;
 services.blueman.enable = true;
 
-systemd.user.services.blueman-applet.enable = false;
 
 # ------------------------------------------------------------
 
@@ -251,7 +241,6 @@ systemd.user.services.blueman-applet.enable = false;
 services.pipewire = {
 enable = true;
 
-```
 alsa = {
   enable = true;
   support32Bit = true;
@@ -259,7 +248,6 @@ alsa = {
 
 pulse.enable = true;
 jack.enable = true;
-```
 
 };
 
@@ -299,7 +287,6 @@ gdb
 git
 neovim
 
-```
 # Terminal tools
 bc
 curl
@@ -337,7 +324,6 @@ adwaita-icon-theme
     '';
   }))
 
-```
 
 ];
 
@@ -352,7 +338,6 @@ packages = with pkgs; [
 cantarell-fonts
 jetbrains-mono
 
-```
   nerd-fonts.jetbrains-mono
   nerd-fonts.fira-code
   nerd-fonts.iosevka
@@ -367,7 +352,6 @@ fontconfig = {
     serif = [ "Noto Serif" ];
   };
 };
-```
 
 };
 
