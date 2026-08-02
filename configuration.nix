@@ -20,7 +20,7 @@ nix.settings.experimental-features = [
 
 nix.settings.auto-optimise-store = true;
 nixpkgs.config.allowUnfree = true;
-
+nix.settings.http-connections = 50; # Defaults to 25
 # ------------------------------------------------------------
 
 # System
@@ -138,6 +138,7 @@ extraConfig = ''
 };
 
 security.rtkit.enable = true;
+
 
 # ------------------------------------------------------------
 
@@ -258,9 +259,14 @@ jack.enable = true;
 
 # ------------------------------------------------------------
 
-virtualisation.docker.enable = true;
 
 virtualisation.libvirtd.enable = true;
+
+virtualisation.podman = {
+  enable = true;
+  dockerCompat = true; # Exposes Podman as 'docker' for Distrobox / CLI scripts
+  defaultNetwork.settings.dns_enabled = true; # Required for container name resolution
+};
 
 # ------------------------------------------------------------
 
@@ -293,6 +299,7 @@ neovim
 bc
 curl
 wget
+distrobox
 unzip
 tmux
 stow
